@@ -1,2 +1,26 @@
-This repository is for me to practice python skill on stock analysis. 
-I will try to use technical analysis,fundamental analysis or even have Macroeconomics.
+這份練習的目的是在python上運行台灣股票的技術分析圖型
+
+練習心得:
+一.剛開始的股價獲取我原本計算使用爬蟲程式爬取台灣證券交易所得成交訊息，後來查到有pandas.datareader和twstock這兩個套件可以使用便都試試看。
+實測以後發現:
+	datareader雖然速度很快但是有一些台灣股票不支援查詢，回傳直接是dataframe
+	twstock雖然速度較慢但支援範圍廣，回傳是list，要另外轉換
+為了保持查詢的便利性我選擇使用twstock。
+
+二.技術指標方面有talib.absract提供移動平均線和RSI指標的函式方便一行完成計算，
+K線圖方面有mpl_finance.candlestick2_ohlc(蠟燭圖)方便我將數值輸入後完成紅綠相交的美麗圖型。
+
+三.遇到的問題有:
+	1.Xlabel上的日期格式太常容易重疊，利用plt()內的rotation調整字串角度解決。
+	2.當交易量和K線圖在同一張報表中顯現時，交易量大的天數顯現的長條圖容易蓋住K線圖，
+	  使用plt()內的alpha調整透明度解決。
+	3.顯現兩張報表時X軸有重複顯現，使用plt.setp()內的visible=False將指定X軸變為不可視解決。
+	4.twstock在獲取資料時有nan值，考慮到假日股票市場停擺導致獲得日期本就不連貫，
+	  直接將nan值刪除。受到RSI公式影響，RSI報表的資料前幾欄將為nan值，我們將其直接補0解決。
+
+四.同時顯現兩張報表(RSI和K線圖)，剛開始我使用matplotlib的subplot方式顯現，
+但兩張報表都擁有相同大小視覺上並不美觀，後來我改用grid函式將fig做分割，
+並分配給不同報表，實現RSI報表較小且貼近K線圖報表並共用X軸，擁有輔助分析的效果。
+
+五.RSI在股票技術分析上有分析目前市場是否有超買/超賣的趨勢，通常>80為超買，<30為超賣。
+為保有安全區間設定>70即為超買。並繪製兩條直線在RSI報表的Y軸上方面辨識。
